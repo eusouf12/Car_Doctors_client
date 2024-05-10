@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 import Swal from 'sweetalert2'
+import axios from "axios";
 
 const Bookings = () => {
     const [bookings, setBookings] = useState([]);
@@ -10,13 +11,19 @@ const Bookings = () => {
     const url = `http://localhost:5000/bookings?email=${user?.email}`;
 
     useEffect(() => {
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                setBookings(data);
-                console.log(data);
-            })
-    }, [])
+        axios.get(url,{withCredentials:true})
+        .then(res => {
+           setBookings(res.data);
+           console.log(res.data);
+         })
+
+        // fetch(url)
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         setBookings(data);
+        //         console.log(data);
+        //     })
+    }, [url])
 
     const handleConfirm = id => {
         fetch(`http://localhost:5000/bookings/${id}`, {
@@ -76,9 +83,9 @@ const Bookings = () => {
                                     icon: "success"
                                 });
                                 const remaining = bookings.filter(cof => cof._id !== id);
-                                
+
                                 setBookings(remaining);
-                               
+
                             }
                         })
                 }
@@ -130,10 +137,10 @@ const Bookings = () => {
 
                                 <th>
                                     {
-                                        booking.status==='confirm'?<span className="font-bold text-primary">Confirmed</span>
-                                        :<button onClick={() => handleConfirm(booking._id)}
-                                        className="btn btn-ghost btn-xs">Please Confirm
-                                    </button>
+                                        booking.status === 'confirm' ? <span className="font-bold text-primary">Confirmed</span>
+                                            : <button onClick={() => handleConfirm(booking._id)}
+                                                className="btn btn-ghost btn-xs">Please Confirm
+                                            </button>
                                     }
                                 </th>
                             </tr>)
