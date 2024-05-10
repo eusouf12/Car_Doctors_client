@@ -23,18 +23,21 @@ const Login = () => {
         logInUser(email, password)
         .then(result => {
             console.log(result.user);
-            const user ={email};
+             const user ={email};
+             console.log(user);
             e.target.reset();
             toast("successfully Login");
-            // setTimeout(() => {
-            //      navigate(location?.state ? location?.state:'/');
-            // }, 1000);
-            axios.post('http://localhost:5000/jwt',user)
+            
+             axios.post('http://localhost:5000/jwt',user,{withCredentials:true})
             .then(res=>{
                 console.log(res.data);
-            })
 
-
+                if(res.data.success){
+                    setTimeout(() => {
+                        navigate(location?.state ? location?.state:'/');
+                   }, 1000);
+                }
+             })
 
         })
         .catch(error => {
@@ -49,9 +52,9 @@ const Login = () => {
             .then(result => {
                 console.log(result.user);
                 toast("successfully Login");
-                // setTimeout(() => {
-                //     navigate(location?.state ? location?.state:'/');
-                // }, 1000);
+                setTimeout(() => {
+                    navigate(location?.state ? location?.state:'/');
+                }, 1000);
             })
             .catch(() => {
                 toast.warn("Plese Give Valid Email And Password");
